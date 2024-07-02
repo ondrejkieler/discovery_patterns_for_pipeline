@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sa_pattern">
+    <sa_pattern action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <ci_type>cmdb_ci_appl</ci_type>
+        <cpattern_type>1</cpattern_type>
+        <description/>
+        <directory>false</directory>
+        <enforce_proc_classy>false</enforce_proc_classy>
+        <invoke_per_account>false</invoke_per_account>
+        <metadata_id>969f1e8447564a508266565a516d4305</metadata_id>
+        <name>BMC Discovery Proxy Ondrej</name>
+        <ndl>pattern {&#13;
+	metadata {&#13;
+		id = "969f1e8447564a508266565a516d4305"&#13;
+		name = "BMC Discovery Proxy Ondrej"&#13;
+		description = ""&#13;
+		citype = "cmdb_ci_appl"&#13;
+	}&#13;
+	identification {&#13;
+		name = "Identify BMC Discovery Proxy"&#13;
+		entry_point {type = "cmdb_ci_endpoint_tcp"}&#13;
+		find_process_strategy {strategy = NONE}&#13;
+		step {&#13;
+			name = "Set Name"&#13;
+			set_attr {&#13;
+				"name"&#13;
+				concat {&#13;
+					"BMC Discovery Proxy@"&#13;
+					"joker"&#13;
+				}&#13;
+			}&#13;
+		}&#13;
+		step {&#13;
+			name = "Set version"&#13;
+			runcmd_to_var {&#13;
+				cmd = "cd C:\\Program Files\\BMC Software\\Discovery Proxy\\  &amp;&amp; tw_proxy_control -v"&#13;
+				execution_mode = "DEFAULT"&#13;
+				var_names = "version"&#13;
+				parsing_strategy = cmdline_linux_parsing {after_option = "Version"}&#13;
+				if_not_found_do = terminate {}&#13;
+				cache_flag = 0&#13;
+			}&#13;
+		}&#13;
+	}&#13;
+}&#13;
+</ndl>
+        <parent/>
+        <serverless>false</serverless>
+        <source/>
+        <sys_class_name>sa_pattern</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2024-07-02 13:09:16</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>2a2cac5f470782548266565a516d43a0</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>BMC Discovery Proxy Ondrej</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Discovery Patterns for Pipeline" source="8bd79e28470b8ad08266565a516d43c2">8bd79e28470b8ad08266565a516d43c2</sys_package>
+        <sys_policy/>
+        <sys_replace display_value="BMC Discovery Proxy">969f1e8447564a508266565a516d4305</sys_replace>
+        <sys_scope display_value="Discovery Patterns for Pipeline">8bd79e28470b8ad08266565a516d43c2</sys_scope>
+        <sys_update_name>sa_pattern_2a2cac5f470782548266565a516d43a0</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2024-07-02 13:09:45</sys_updated_on>
+        <version/>
+    </sa_pattern>
+</record_update>
