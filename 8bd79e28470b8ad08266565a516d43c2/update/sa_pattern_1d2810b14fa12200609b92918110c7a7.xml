@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sa_pattern">
+    <sa_pattern action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <ci_type>cmdb_ci_linux_server</ci_type>
+        <cpattern_type>3</cpattern_type>
+        <description/>
+        <directory>false</directory>
+        <enforce_proc_classy>false</enforce_proc_classy>
+        <invoke_per_account>false</invoke_per_account>
+        <metadata_id>1d2810b14fa12200609b92918110c7a7</metadata_id>
+        <name>Linux Server</name>
+        <ndl>pattern {&#13;
+	metadata {&#13;
+		id = "1d2810b14fa12200609b92918110c7a7"&#13;
+		name = "Linux Server"&#13;
+		description = ""&#13;
+		citype = "cmdb_ci_linux_server"&#13;
+	}&#13;
+	identification {&#13;
+		name = "discovery"&#13;
+		entry_point {type = "*"}&#13;
+		find_process_strategy {strategy = NONE}&#13;
+		step {&#13;
+			name = "Unix\\Linux Name Formatting"&#13;
+			ref {refid = "46d81a979f10320055063758442e707f"}&#13;
+		}&#13;
+		step {&#13;
+			name = "Insert OS name, version and name to cmdb_ci_linux_server"&#13;
+			transform {&#13;
+				src_table_name = "cmdb_ci_linux_server"&#13;
+				target_table_name = "cmdb_ci_linux_server"&#13;
+				operation {&#13;
+					set_field {&#13;
+						field_name = "os_version"&#13;
+						value = get_attr {"osVersion"}&#13;
+					}&#13;
+					set_field {&#13;
+						field_name = "name"&#13;
+						value = get_attr {"formattedHostname"}&#13;
+					}&#13;
+					set_field {&#13;
+						field_name = "host_name"&#13;
+						value = get_attr {"formattedHostname"}&#13;
+					}&#13;
+				}&#13;
+			}&#13;
+		}&#13;
+		step {&#13;
+			name = "Linux - Identity"&#13;
+			ref {refid = "a273cfe39f2032001d753758442e70b7"}&#13;
+		}&#13;
+		step {&#13;
+			name = "DNS"&#13;
+			ref {refid = "ede27fe5db652200868a7c841f961984"}&#13;
+		}&#13;
+		step {&#13;
+			name = "Get DNS Names for IPs"&#13;
+			ref {refid = "4bc39226db968010b0fa5635dc96190e"}&#13;
+		}&#13;
+		step {&#13;
+			name = "Get DNS name for ManagementIP"&#13;
+			if {&#13;
+				condition = all {&#13;
+					eq {&#13;
+						get_attr {"shouldIncludeDomain"}&#13;
+						"true"&#13;
+					}&#13;
+					is_not_empty {get_attr {"cmdb_ci_dns_name[1].name"}}&#13;
+				}&#13;
+				on_true = set_attr {&#13;
+					"DNSName"&#13;
+					eval {"javascript: var rtrn ='';
+					var table =${cmdb_ci_dns_name};
+					var ip=${computer_system.managementIP};
+					for(var i=0;i &lt; table.size();i++){
+   					var map=table.get(i);
+   					if(map.get('ip_address') == ip){
+      				rtrn =map.get('name');
+      				break;
+   				}
+			}
+			rtrn =rtrn;"}&#13;
+				}&#13;
+				on_false = nop {}&#13;
+			}&#13;
+		}&#13;
+		step {&#13;
+			name = "Set DNS name to name for Linux Server"&#13;
+			if {&#13;
+				condition = all {&#13;
+					is_not_empty {get_attr {"DNSName"}}&#13;
+					eq {&#13;
+						get_attr {"isSshTrusted"}&#13;
+						"false"&#13;
+					}&#13;
+				}&#13;
+				on_true = set_attr {&#13;
+					"cmdb_ci_linux_server[*].name"&#13;
+					get_attr {"DNSName"}&#13;
+				}&#13;
+				on_false = nop {}&#13;
+			}&#13;
+		}&#13;
+		step {&#13;
+			name = "Linux - Find FQDN"&#13;
+			ref {refid = "5e1243e39f2032001d753758442e7041"}&#13;
+		}&#13;
+		step {&#13;
+			name = "Linux - Distribution"&#13;
+			ref {refid = "fe32c7e39f2032001d753758442e7065"}&#13;
+		}&#13;
+		step {&#13;
+			name = "UNIX - OS Uptime"&#13;
+			ref {refid = "80d2cbe39f2032001d753758442e7092"}&#13;
+		}&#13;
+		step {&#13;
+			name = "Update start date on Linux CI"&#13;
+			set_attr {&#13;
+				"cmdb_ci_linux_server[*].start_date"&#13;
+				get_attr {"start_date"}&#13;
+			}&#13;
+		}&#13;
+		step {&#13;
+			name = "Linux - Memory"&#13;
+			ref {refid = "4103cbe39f2032001d753758442e709a"}&#13;
+		}&#13;
+		step {&#13;
+			name = "Linux - Memory Modules"&#13;
+			ref {refid = "dc334fe39f2032001d753758442e70b7"}&#13;
+		}&#13;
+		step {&#13;
+			name = "Linux - Network ARP Tables"&#13;
+			ref {refid = "84538fe39f2032001d753758442e7086"}&#13;
+		}&#13;
+		step {&#13;
+			name = "Linux - CPU"&#13;
+			ref {refid = "e69343279f2032001d753758442e7067"}&#13;
+		}&#13;
+		step {&#13;
+			name = "Linux - Storage"&#13;
+			ref {refid = "303407279f2032001d753758442e708c"}&#13;
+		}&#13;
+		step {&#13;
+			name = "Linux - Cloud"&#13;
+			ref {refid = "4660f86edb057200c12ef9361d96190c"}&#13;
+		}&#13;
+	}&#13;
+}&#13;
+</ndl>
+        <parent/>
+        <serverless>false</serverless>
+        <source/>
+        <sys_class_name>sa_pattern</sys_class_name>
+        <sys_created_by>now.patterns</sys_created_by>
+        <sys_created_on>2016-08-30 11:40:35</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>1d2810b14fa12200609b92918110c7a7</sys_id>
+        <sys_mod_count>461</sys_mod_count>
+        <sys_name>Linux Server</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Pattern Designer" source="com.snc.pattern.designer">6736b60e476502108266565a516d43ab</sys_package>
+        <sys_policy/>
+        <sys_replace/>
+        <sys_scope display_value="Discovery Patterns for Pipeline">8bd79e28470b8ad08266565a516d43c2</sys_scope>
+        <sys_update_name>sa_pattern_1d2810b14fa12200609b92918110c7a7</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2024-07-02 05:59:46</sys_updated_on>
+        <version/>
+    </sa_pattern>
+    <sys_claim action="INSERT_OR_UPDATE">
+        <claim_owner_scope display_value="Discovery Patterns for Pipeline">8bd79e28470b8ad08266565a516d43c2</claim_owner_scope>
+        <claim_timestamp>190720719500000001</claim_timestamp>
+        <metadata_update_name>sa_pattern_1d2810b14fa12200609b92918110c7a7</metadata_update_name>
+        <previous_claim_app_version>1.0.0</previous_claim_app_version>
+        <previous_claim_name>Discovery Patterns for Pipeline</previous_claim_name>
+        <previous_claim_scope>8bd79e28470b8ad08266565a516d43c2</previous_claim_scope>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2024-07-02 05:59:46</sys_created_on>
+        <sys_id>87d987cb478742548266565a516d43ea</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2024-07-02 05:59:46</sys_updated_on>
+    </sys_claim>
+    <sys_claim action="INSERT_OR_UPDATE">
+        <claim_owner_scope display_value="Discovery Patterns for Pipeline">8bd79e28470b8ad08266565a516d43c2</claim_owner_scope>
+        <claim_timestamp>1907207194f0000001</claim_timestamp>
+        <metadata_update_name>sa_pattern_1d2810b14fa12200609b92918110c7a7</metadata_update_name>
+        <previous_claim_app_version/>
+        <previous_claim_name>com.snc.pattern.designer</previous_claim_name>
+        <previous_claim_scope>com.snc.pattern.designer</previous_claim_scope>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2024-07-02 05:59:46</sys_created_on>
+        <sys_id>4bd987cb478742548266565a516d43ea</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2024-07-02 05:59:46</sys_updated_on>
+    </sys_claim>
+</record_update>
